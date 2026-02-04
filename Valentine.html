@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+
+<style>
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1c1c1c;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+    z-index: 1;
+}
+
+.name_text {
+    font-size: 50px;
+    font-weight: bold;
+    color: #ff9aa2;
+    margin-bottom: 10px;
+}
+
+.header_text {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    margin: 10px 0;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #d3bcc0;
+    color: #0e103d;
+    padding: 15px 32px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+#noButton {
+    position: absolute;
+}
+
+.gif_container {
+    margin-top: 20px;
+}
+
+#page2 {
+    display: none;
+}
+
+/* Fireworks canvas */
+#fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: none;
+    z-index: 9999;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .name_text {
+        font-size: 36px;
+    }
+    .header_text {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- FIREWORKS -->
+<canvas id="fireworks"></canvas>
+
+<!-- PAGE 1 -->
+<div class="container" id="page1">
+    <h1 class="name_text">KOMAL 💖</h1>
+
+    <h1 class="header_text">Would you like to be my Valentine?</h1>
+
+    <div class="gif_container">
+        <img src="https://media.tenor.com/-fxSxMDttpcAAAAi/anime-love.gif" alt="love gif">
+    </div>
+
+    <div class="buttons">
+        <button class="btn" onclick="yesClicked()">Yes</button>
+        <button class="btn" id="noButton" onmouseover="moveNo()">No</button>
+    </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="container" id="page2">
+   
+
+    <h1 class="header_text">
+        Now that you agreed to be my Valentine 😌
+    </h1>
+
+    <h1 class="header_text">
+        I don’t need grand moments,<br>
+        just you — every day, in the little things.
+    </h1>
+
+    <div class="gif_container">
+        <img src="https://media.tenor.com/bhh8ONgUSjYAAAAi/anime.gif" alt="happy gif">
+    </div>
+</div>
+
+<script>
+/* Fireworks setup */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height / 2;
+    const colors = ["#ff4d6d", "#ffd166", "#9bf6ff", "#cdb4db"];
+
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x,
+            y,
+            r: Math.random() * 3 + 1,
+            c: colors[Math.floor(Math.random() * colors.length)],
+            dx: (Math.random() - 0.5) * 6,
+            dy: (Math.random() - 0.5) * 6,
+            life: 80
+        });
+    }
+}
+
+function animateFireworks() {
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, i) => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.c;
+        ctx.fill();
+
+        if (p.life <= 0) particles.splice(i, 1);
+    });
+
+    requestAnimationFrame(animateFireworks);
+}
+
+/* YES click */
+function yesClicked() {
+    document.getElementById("page1").style.display = "none";
+    canvas.style.display = "block";
+
+    animateFireworks();
+    const fw = setInterval(createFirework, 300);
+
+    setTimeout(() => {
+        clearInterval(fw);
+        canvas.style.display = "none";
+        document.getElementById("page2").style.display = "block";
+    }, 3000);
+}
+
+/* NO button */
+function moveNo() {
+    const btn = document.getElementById("noButton");
+    const padding = 20;
+    const maxX = window.innerWidth - btn.offsetWidth - padding;
+    const maxY = window.innerHeight - btn.offsetHeight - padding;
+    btn.style.left = Math.random() * maxX + "px";
+    btn.style.top = Math.random() * maxY + "px";
+}
+</script>
+
+</body>
+</html>
